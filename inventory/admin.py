@@ -24,3 +24,19 @@ class StockAdmin(admin.ModelAdmin):
     list_display = ['stock_id', 'product', 'current_qty', 'last_updated']
     ordering = ['-current_qty']
 
+
+@admin.register(PurchaseOrder)
+class PurchaseOrderAdmin(admin.ModelAdmin):
+    list_display = ['purchase_order_id', 'vendor', 'order_date', 'expected_delivery_date', 'status', 'total_cost']
+    ordering = ['-order_date']
+
+
+@admin.register(PurchaseOrderDetails)
+class PurchaseOrderDetailsAdmin(admin.ModelAdmin):
+    list_display = ['id', 'purchase_order', 'product', 'qty', 'unit_price']
+
+
+@admin.register(PurchaseHistory)
+class PurchaseHistoryAdmin(admin.ModelAdmin):
+    list_display = ['purchase_id', 'purchase_order', 'product', 'purchase_date', 'qty', 'unit_price', 'total_price']
+    
