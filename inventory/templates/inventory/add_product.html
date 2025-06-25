@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{% if form.instance.product_id %}Update Product{% else %}Create New Product{% endif %}{% endblock %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3>{% if form.instance.product_id  %}Update Product{% else %}Create New Product{% endif %}</h3>
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+    <div class="form-container">
+        <form method="post" 
+              action="{% if form.instance.pk %}{% url 'inventory:product-update' form.instance.pk %}{% else %}{% url 'inventory:product-create' %}{% endif %}">
+            
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{field.id_for_label}}" class="form-label">{{field.label}}</label>
+                    {{field|add_class:"form-control"}}
+                    
+                    {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    
+                    {% if field.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in field.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary" type="submit">
+                    {% if form.instance.product_id %}Update{% else %}Create{% endif %}
+                </button>
+                <a href="{% url 'inventory:products-list' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

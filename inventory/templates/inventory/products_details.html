@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Product Details{% endblock %}
+
+
+{% block content %}
+<div class="product-detail-container">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Product Header Section -->
+    <div class="product-header">
+        <h1 class="product-title">{{ product.name }}</h1>
+        <div class="product-sku">SKU: <span class="sku-value">{{ product.sku }}</span></div>
+    </div>
+
+    <!-- Product Main Content -->
+    <div class="product-content">
+        <div class="product-description">
+            <h3>Description</h3>
+            <p>{{ product.description }}</p>
+        </div>
+
+        <!-- Product Metadata -->
+        <div class="product-meta">
+            <div class="meta-item">
+                <span class="meta-label">Price:</span>
+                <span class="price">₹{{ product.price }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Quantity Available:</span>
+                <span class="quantity">{{ product.qty }} units</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Vendor:</span>
+                <span class="vendor">{{ product.vendor_id.name }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="product-actions">
+        <a href="{% url 'inventory:product-update' product.product_id %}" class="btn btn-primary">Update</a>
+        <a href="{% url 'inventory:product-delete' product.product_id %}" class="btn btn-outline">Delete</a>
+    </div>
+</div>
+
+{% endblock %}

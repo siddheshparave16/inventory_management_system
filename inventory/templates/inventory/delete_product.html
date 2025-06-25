@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Delete Product{% endblock  %}
+
+{% block content %}
+
+<div class="delete-container">
+    <div class="delete-warning">
+        <i class="bi bi-exclamation-triangle-fill"></i> Warning!
+    </div>
+    
+    <div class="delete-message">
+        Are you sure you want to permanently delete<br>
+        <strong>"{{ product.name }}"</strong> (SKU: {{ product.sku }})?
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="delete-actions">
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash-fill"></i> Confirm Delete
+            </button>
+            <a href="{% url 'inventory:product-details' product.product_id %}" class="btn btn-secondary">
+                <i class="bi bi-x-circle"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{% endblock  %}

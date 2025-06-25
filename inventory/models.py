@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from phonenumber_field.modelfields import PhoneNumberField 
 
 
@@ -30,6 +31,8 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.name} (SKU: {self.sku})"
 
+    def get_absolute_url(self):
+        return reverse('inventory:product-details', kwargs={'product_id': self.product_id})
 
 class Stock(models.Model):
     stock_id = models.BigAutoField(primary_key=True)
