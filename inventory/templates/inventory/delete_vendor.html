@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %} Delete Product{% endblock  %}
+{% block title %} Delete Vendor{% endblock %}
 
 {% block content %}
 
@@ -11,18 +11,18 @@
     </div>
     
     <div class="delete-message">
-        Are you sure you want to permanently delete this <b>Product:</b> <br>
-        <strong>"{{ product.name }}"</strong> (SKU: {{ product.sku }})?
+        Are you sure you want to permanently delete this <b>Vendor:</b><br>
+        <strong>"{{ vendor.name }}"</strong> (SKU: {{ vendor.sku }})?
     </div>
 
     <div class="delete-actions">
         <form method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">
-                <i class="bi bi-trash-fill"></i> Confirm Delete
-            </button>
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash-fill"></i> Confirm Delete
+                </button>
         </form>
-        <a href="{% url 'inventory:product-details' product.product_id %}" class="btn btn-secondary">
+        <a href="{% url 'inventory:vendor-details' vendor.vendor_id %}" class="btn btn-secondary">
             <i class="bi bi-x-circle"></i> Cancel
         </a>
     </div>

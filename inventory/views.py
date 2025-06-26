@@ -2,9 +2,8 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.urls import reverse_lazy
-from .models import Product
-from .forms import ProductForm
+from .models import Product, Vendor
+from .forms import ProductForm, VendorForm
 
 
 @login_required
@@ -37,7 +36,7 @@ def create_product_view(request):
     else:
         form = ProductForm()
 
-    return render(request, 'inventory/add_product.html', {"form":form})
+    return render(request, 'inventory/product_form.html', {"form":form})
 
 
 def update_product_view(request, product_id):
@@ -53,7 +52,7 @@ def update_product_view(request, product_id):
     else:
         form = ProductForm(instance=product)
     
-    return render(request, 'inventory/add_product.html', {'form':form, 'product':product})
+    return render(request, 'inventory/product_form.html', {'form':form, 'product':product})
 
 
 def delete_product_view(request, product_id):
@@ -67,5 +66,56 @@ def delete_product_view(request, product_id):
     return render(request, 'inventory/delete_product.html', {'product':product})
 
 
+def vendor_list_view(request):
+    vendors_list = Vendor.objects.all()
+    return render(request, 'inventory/vendors_list.html', {'vendors_list':vendors_list})
 
+
+def vendor_details_view(request, vendor_id):
+    vendor = get_object_or_404(Vendor, pk=vendor_id)
+    return render(request, 'inventory/vendor_details.html', {'vendor':vendor})
+
+
+def create_vendor_view(request):
+    if request.method=='POST':
+        form = VendorForm(request.POST)
+
+        if form.is_valid():
+            vendor = form.save(commit=False)
+            vendor.email = form.cleaned_data['email']
+            vendor.save()
+            messages.success(request, "New Vendor Created Successfully.")
+            return redirect('inventory:vendor-details', vendor_id=vendor.vendor_id)
+    else:
+        form = VendorForm()
+    
+    return render(request, 'inventory/vendor_form.html', {'form': form})
+
+
+def update_vendor_view(request, vendor_id):
+    vendor = get_object_or_404(Vendor, vendor_id=vendor_id)
+
+    if request.method=='POST':
+        form = VendorForm(request.POST, instance=vendor)
+
+        if form.is_valid():
+            vendor = form.save(commit=False)
+            vendor.email = form.cleaned_data['email']
+            vendor.save()
+            messages.success(request, "Vendor Updated Successfully.")
+            return redirect('inventory:vendor-details', vendor_id=vendor.vendor_id)
+    else:
+        form = VendorForm(instance=vendor)
+    
+    return render(request, 'inventory/vendor_form.html', {'form': form})
+
+def delete_vendor_view(request, vendor_id):
+    vendor = get_object_or_404(Vendor, vendor_id=vendor_id)
+
+    if request.method == 'POST':
+        vendor.delete()
+        messages.success(request, "Vendor deleted successfully.")
+        return redirect('inventory:vendors-list')
+
+    return render(request, 'inventory/delete_vendor.html', {'vendor':vendor})
 
