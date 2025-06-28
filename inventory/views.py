@@ -2,14 +2,18 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Product, Vendor
-from .forms import ProductForm, VendorForm
-
+from django.urls import reverse_lazy
+from .models import Product, Vendor, PurchaseOrder
+from .forms import ProductForm, VendorForm, PurchaseOrderForm
+from collections import defaultdict
+from django.views.generic import DetailView, UpdateView, CreateView, DeleteView
 
 @login_required
 def dashboard(request):
     return render(request, 'inventory/home.html')
 
+
+# views related to Product
 
 def products_list_view(request):
     products_list = Product.objects.all()
@@ -66,6 +70,7 @@ def delete_product_view(request, product_id):
     return render(request, 'inventory/delete_product.html', {'product':product})
 
 
+# Views related to Vendor
 def vendor_list_view(request):
     vendors_list = Vendor.objects.all()
     return render(request, 'inventory/vendors_list.html', {'vendors_list':vendors_list})
@@ -119,3 +124,56 @@ def delete_vendor_view(request, vendor_id):
 
     return render(request, 'inventory/delete_vendor.html', {'vendor':vendor})
 
+
+# Views related to Purchase Orders.
+
+def purchase_orders_list(request):
+    orders = PurchaseOrder.objects.filter(status__in=["PENDING", "COMPLETE", "CANCEL"])
+
+    # initial dictionary
+    orders_by_status = defaultdict(list)
+
+    for order in orders:
+        if order.status == "PENDING":
+            orders_by_status["pending_orders"].append(order)
+        elif order.status == "COMPLETE":
+            orders_by_status["completed_orders"].append(order)
+        elif order.status == "CANCEL":
+            orders_by_status["cancelled_orders"].append(order)
+
+    return render(request, 'inventory/purchase_orders_list.html', orders_by_status)
+
+
+# from here we are use Django's Generic Views
+
+class PurchaseOrderDetailsView(DetailView):
+    model = PurchaseOrder
+    template_name = "inventory/purchase_orders_details.html"
+    context_object_name = "order"
+
+
+class PurchaseOrderCreateView(CreateView):
+    model = PurchaseOrder
+    form_class = PurchaseOrderForm
+    template_name = "inventory/purchase_orders_form.html"
+    context_object_name = 'form'
+
+    def get_success_url(self):
+        return reverse_lazy('inventory:purchase-order-details', kwargs={'pk': self.object.pk})
+
+
+class PurchaseOrderUpdateView(UpdateView):
+    model = PurchaseOrder
+    form_class = PurchaseOrderForm
+    template_name = "inventory/purchase_orders_form.html"
+    context_object_name = 'form'
+
+    def get_success_url(self):
+        return reverse_lazy('inventory:purchase-order-details', kwargs={'pk':self.object.pk})  
+      
+
+class PurchaseOrderDeleteView(DeleteView):
+    model = PurchaseOrder
+    template_name = "inventory/purchase_orders_delete.html"
+    context_object_name = "order"
+    success_url = reverse_lazy('inventory:purchase-orders-list')
