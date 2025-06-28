@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Delete Purchase Order{% endblock  %}
+
+{% block content %}
+<div class="delete-container">
+    <div class="delete-warning">
+        <i class="bi bi-exclamation-triangle-fill"></i> Warning!
+    </div>
+    
+    <div class="delete-message">
+        Are you sure you want to permanently delete this <b>Purchase Order:</b> <br>
+        <strong>"{{ order.purchase_order_id }}"</strong> (Vendor: {{ order.vendor }})?
+    </div>
+
+    <div class="delete-actions">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash-fill"></i> Confirm Delete
+            </button>
+        </form>
+        <a href="{% url 'inventory:purchase-order-details' order.pk %}" class="btn btn-secondary">
+            <i class="bi bi-x-circle"></i> Cancel
+        </a>
+    </div>
+</div>
+{% endblock  %}

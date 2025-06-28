@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Purchase Orders{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Purchase Orders</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <a href="{% url 'inventory:purchase-order-create' %}" class="btn btn-primary btn-sm mb-4">
+        <i class="bi bi-plus-circle"></i> New Order
+    </a>
+
+    <!-- Pending Orders Section -->
+    <div class="row mb-5">
+        <h3 class="border-bottom pb-2 mb-3">Pending Orders</h3>
+        {% for order in pending_orders %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">PO-{{ order.purchase_order_id }}</h5>
+                        <p class="card-text"><strong>Vendor:</strong> {{ order.vendor.name }}</p>
+                        <p class="card-text"><small class="text-muted">Ordered: {{ order.order_date|date:"M d, Y" }}</small></p>
+                        <p class="card-text"><small class="text-muted">Expected Delivery: {{ order.expected_delivery_date|date:"M d, Y" }}</small></p>
+                        <span class="badge bg-warning text-dark">{{ order.status }}</span>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'inventory:purchase-order-details' order.purchase_order_id %}" class="btn btn-outline-primary btn-sm">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info" role="alert">
+                    No pending orders available.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Completed Orders Section -->
+    <div class="row mb-5">
+        <h3 class="border-bottom pb-2 mb-3">Completed Orders</h3>
+        {% for order in completed_orders %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">PO-{{ order.purchase_order_id }}</h5>
+                        <p class="card-text"><strong>Vendor:</strong> {{ order.vendor.name }}</p>
+                        <p class="card-text"><small class="text-muted">Completed: {{ order.expected_delivery_date|date:"M d, Y" }}</small></p>
+                        <p class="card-text"><small class="text-muted">Total: ${{ order.total_cost }}</small></p>
+                        <span class="badge bg-success">{{ order.status }}</span>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'inventory:purchase-order-details' order.purchase_order_id %}" class="btn btn-outline-primary btn-sm">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info" role="alert">
+                    No completed orders available.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Cancelled Orders Section -->
+    <div class="row">
+        <h3 class="border-bottom pb-2 mb-3">Cancelled Orders</h3>
+        {% for order in cancelled_orders %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">PO-{{ order.purchase_order_id }}</h5>
+                        <p class="card-text"><strong>Vendor:</strong> {{ order.vendor.name }}</p>
+                        <p class="card-text"><small class="text-muted">Cancelled: {{ order.expected_delivery_date|date:"M d, Y" }}</small></p>
+                        <p class="card-text"><small class="text-muted">Reason: {{ order.notes|truncatechars:20 }}</small></p>
+                        <span class="badge bg-danger">{{ order.status }}</span>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'inventory:purchase-order-details' order.purchase_order_id %}" class="btn btn-outline-primary btn-sm">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info" role="alert">
+                    No cancelled orders available.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

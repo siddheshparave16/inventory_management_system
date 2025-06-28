@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if form.instance.pk %}Update Purchase Order{% else %}Create Purchase Order{% endif %}
+{% endblock %}
+
+{% block content %}
+<h1>{% if form.instance.pk %}Update Purchase Order{% else %}Create Purchase Order{% endif %}</h1>
+<form method="post" 
+      action="{% if form.instance.pk %} {% url 'inventory:purchase-order-update' form.instance.pk %}
+      {% else %} {% url 'inventory:purchase-order-create' %} {% endif %}">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
+</form>
+{% endblock %}
