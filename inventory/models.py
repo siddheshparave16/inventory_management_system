@@ -29,7 +29,7 @@ class Product(models.Model):
     sku = models.CharField(max_length=20, unique=True,help_text="Stock Keeping Unit")
     description = models.TextField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    vendor_id = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='products')
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='products')
 
     def save(self, *args, **kwargs):
         # First save the product to get an ID

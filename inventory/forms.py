@@ -4,7 +4,7 @@ from .models import Product, Vendor, PurchaseOrder
 class ProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'sku', 'description', 'price', 'vendor_id']
+        fields = ['name', 'sku', 'description', 'price', 'vendor']
 
 
 class VendorForm(ModelForm):

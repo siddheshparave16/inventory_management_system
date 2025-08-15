@@ -11,7 +11,11 @@ dependencies = [
     "django-phonenumber-field (>=8.1.0,<9.0.0)",
     "phonenumbers (>=9.0.7,<10.0.0)",
     "python-dotenv (>=1.1.0,<2.0.0)",
-    "django-widget-tweaks (>=1.5.0,<2.0.0)"
+    "django-widget-tweaks (>=1.5.0,<2.0.0)",
+    "djangorestframework (>=3.16.0,<4.0.0)",
+    "markdown (>=3.8.2,<4.0.0)",
+    "django-filter (>=25.1,<26.0)",
+    "djangorestframework-simplejwt (>=5.5.0,<6.0.0)"
 ]
 
 

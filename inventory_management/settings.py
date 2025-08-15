@@ -27,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('MY_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
 
 
 # Application definition
@@ -45,10 +45,13 @@ INSTALLED_APPS = [
     # third party apps
     'phonenumber_field',
     'widget_tweaks',
+    'rest_framework',
+    'rest_framework_simplejwt',
 
     # custom apps
     'accounts',
     'inventory',
+    
 ]
 
 MIDDLEWARE = [
@@ -156,3 +159,19 @@ LOGOUT_REDIRECT_URL = 'accounts:login'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+# pagination for rest framwork
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5
+}

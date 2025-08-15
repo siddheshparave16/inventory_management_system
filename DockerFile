@@ -1,0 +1,23 @@
+# Use the official Python runtime image
+FROM python:3.13
+
+# create app directory
+RUN mkdir /app 
+
+# Set working directory inside container
+WORKDIR /app
+
+# Set enviroment variable
+# Prevents Python from writing pyc files to disk
+ENV PYTHONDONTWRITEBYTECODE=1
+# Prevent python from buffering stdout and stderr
+ENV PYTHONUNBUFFERED=1
+
+# Upgrade pip
+RUN pip install --upgrade pip
+
+# Copy django project and installed dependencies
+COPY requirements.txt /app/
+
+# Run this command to install all dependencies
+RUN pip install --no-cache-dir -r requirements.txt
